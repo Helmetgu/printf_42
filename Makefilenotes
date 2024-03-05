@@ -1,0 +1,95 @@
+NAME: libftprintf.a
+
+#(INC_DIR = Include directory) allow us to 
+# define path to locate include <header> files
+CC: ggc 
+CFLAGS: -Wall -Werror -Wextra
+SRC_DIR =.
+INC_DIR =.
+
+LIBFT		= libft.a
+LIBFT_DIR	= ./marcus/42core/libft_project
+LIBFT_PATH	= $(LIBFT_DIR)/$(LIBFT)
+
+#List of source files
+SRC_FILE_NAMES: ft_printf.c 
+
+#List of Bouns files (not yet)
+
+#Convert source files names to Full paths
+#Adding prefixing (SRC_DIR)/ to each file name of SRC_FILE_NAMES
+#creating a list of source paths e.g: ./ft_printf.c
+# E.g: "src/ft_printf.c src/utils.c src/main.c"
+
+
+
+
+SRC_FILE_PATHS = $(addprefix $(SRC_DIR)/, $(SRC_FILE_NAMES))
+
+#Generate corresponding project file names
+#Generate extension with ".o" as an element in OBJ_FILE_PATHS
+
+
+
+
+OBJ_FILE_PATHS = $(SRC_FILE_PATHS:.c=.o)
+
+all: $(NAME) $(LIBFT_NAME)
+
+#ar rcs- ar(creates static library, adding object files to library)
+# rcs(r-replace(Replace or add files to library), 
+# c-create(to create the archive if it doesnt exist),
+# s-write an index(creates an index for the archive, for quick
+# look for files within the library)).
+
+
+
+
+$(NAME): $(OBJ_FILE_PATHS)
+	ar rcs $(NAME) $(OBJ_FILE_PATHS)
+
+$(LIBFT_NAME): $(LIBFT_PATH)
+	ar rcs $(LIBFT_NAME) $(LIBFT_PATH)
+
+#Pattern rule to compile individual source files to object files
+# targets: $(SRC_DIR)/%.o targets object files(%.o) located at 
+# $(SRC_DIR) directory. 
+# 
+# %- is a wildcard that matches any vaild filename prefix.
+# For each source file $(SRC_DIR), this will create and object
+# file ".o" @ same directory.
+# .o files are depending on ,c files, Thus arranged as such->
+# 
+# -I flag specify one or more directories which the compiler
+#  should search for header files, "-I<directory>".
+# 
+# "-c"(create) is a compiler option that generate object files .o
+# 
+# "$<" the first dependency of the rule, example, ft_printf.o
+# is dependent of ft_printf.c cause without .c, .o don't exist.
+#
+# "-o $@" $@ is the target of the rule, output the compiled
+# object file with the same name as target.(obj_file_paths)
+# while "-o" compiles files <output_files>
+
+
+
+
+$(OBJ_FILE_PATHS): $(SRC_DIR)/%.o : $(SRC_DIR)/%.c 
+	$(CC) $(CFLAGS) -I $(INC_DIR) -c $< -o $@ 
+
+
+
+
+
+#Creating rules to compile individual source files for bonus to object files
+clean: rm -f $(OBJ_FILE_PATHS)
+
+#clear .o files including static library $(NAME)
+fclean: clean
+	rm -f $(NAME)
+
+#clean files and remake "all"
+re: fclean all
+
+.PHONY: all clean fclean re bonus`
